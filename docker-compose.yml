@@ -5,7 +5,8 @@ services:
     image: mysql:5.7   # Use MySQL image instead of MariaDB
     ports:
       - "3310:3306"     # ***
-    restart: always
+    restart: always     
+    # The restart policy `always` in Docker means containers will automatically restart if they stop, unless stopped manually
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: nextcloud
@@ -15,8 +16,8 @@ services:
   rabbitmq:
     image: rabbitmq:3.8
     ports:
-      - "5673:5672"   # ***
-      - "15673:15672" # ***
+      - "5673:5672"   # is used for the AMQP protocol, allowing clients to publish and consume messages {AMQP is the protocol RabbitMQ uses for messaging}
+      - "15673:15672" # used for accessing the RabbitMQ management UI for monitoring and managing the RabbitMQ server.
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: guest
@@ -37,11 +38,11 @@ services:
       - "8085:80" # ***
     restart: always
     volumes:
-      - nextcloud_data:/var/www/html
+      - nextcloud_data:/var/www/html #  ***
     environment:
       NEXTCLOUD_ADMIN_USER: admin           # ***
       NEXTCLOUD_ADMIN_PASSWORD: secret      # important
       NEXTCLOUD_TRUSTED_DOMAINS: localhost
 
-volumes:
+volumes:            # file are storing in volumes, which is mounted to the /var/www/html directory inside the Nextcloud container
   nextcloud_data:
